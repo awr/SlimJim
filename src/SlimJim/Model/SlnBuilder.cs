@@ -150,7 +150,7 @@ namespace SlimJim.Model
 			}
 		}
 
-		private void AddProjectSubtree(Guid projectGuid)
+		private void AddProjectSubtree(string projectGuid)
 		{
 			Proj referencedProject = FindProjectByProjectGuid(projectGuid);
 
@@ -181,7 +181,7 @@ namespace SlimJim.Model
 			}
 		}
 
-		private Proj FindProjectByProjectGuid(Guid projectGuid)
+		private Proj FindProjectByProjectGuid(string projectGuid)
 		{
 			return projectsList.Find(csp => csp.Guid == projectGuid);
 		}

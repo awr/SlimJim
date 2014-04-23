@@ -69,7 +69,7 @@ namespace SlimJim
 
 				var projectReference = doc.CreateElement("ProjectReference", MSBuildXmlNamespace);
 				projectReference.SetAttribute("Include", reference.Path);
-				projectReference.AppendChild(CreateElementWithInnerText(doc, "Project", reference.Guid.ToString("B")));
+				projectReference.AppendChild(CreateElementWithInnerText(doc, "Project", reference.Guid));
 				projectReference.AppendChild(CreateElementWithInnerText(doc, "Name", reference.ProjectName));
 
 				var wrapper = doc.CreateElement("SlimJimReplacedReference", MSBuildXmlNamespace);

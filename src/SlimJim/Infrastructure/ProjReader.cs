@@ -26,7 +26,7 @@ namespace SlimJim.Infrastructure
 			{
 				Path = csProjFile.FullName,
 				AssemblyName = assemblyName.Value,
-				Guid = Guid.Parse(properties.Element(Ns + "ProjectGuid").ValueOrDefault()),
+				Guid = Guid.Parse(properties.Element(Ns + "ProjectGuid").ValueOrDefault()).ToString("B"),
 				TargetFrameworkVersion = properties.Element(Ns + "TargetFrameworkVersion").ValueOrDefault(),
 				ReferencedAssemblyNames = ReadReferencedAssemblyNames(xml),
 				ReferencedProjectGuids = ReadReferencedProjectGuids(xml),
@@ -60,11 +60,11 @@ namespace SlimJim.Infrastructure
 			return name.Substring(0, name.IndexOf(","));
 		}
 
-		private List<Guid> ReadReferencedProjectGuids(XElement xml)
+		private List<string> ReadReferencedProjectGuids(XElement xml)
 		{
 			return (
                 from pr in xml.DescendantsAndSelf(Ns + "ProjectReference")
-					  select Guid.Parse(pr.Element(Ns + "Project").Value)).ToList();
+					  select Guid.Parse(pr.Element(Ns + "Project").Value).ToString("B")).ToList();
 		}
 
 		private bool FindImportedNuGetTargets(XElement xml)

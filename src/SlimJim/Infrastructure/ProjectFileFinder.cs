@@ -18,32 +18,42 @@ namespace SlimJim.Infrastructure
 			IgnorePatterns(@"^\.svn$", @"^\.hg$", @"^\.git$", "^bin$", "^obj$", "ReSharper");
 		}
 
-		public virtual List<FileInfo> FindAllProjectFiles(string startPath)
+		public virtual List<FileInfo> FindAllCsProjectFiles(string startPath)
 		{
 			Log.InfoFormat("Searching for .csproj files at {0}", startPath);
 
 			var root = new DirectoryInfo(startPath);
-			var projectFiles = GetProjectFiles(root);
+			var projectFiles = GetProjectFiles(root, "*.csproj");
 
 			return projectFiles;
 		}
 
-		private List<FileInfo> GetProjectFiles(DirectoryInfo directory)
+        public virtual List<FileInfo> FindAllVbProjectFiles(string startPath)
+        {
+            Log.InfoFormat("Searching for .vbproj files at {0}", startPath);
+
+            var root = new DirectoryInfo(startPath);
+            var projectFiles = GetProjectFiles(root, "*.vbproj");
+
+            return projectFiles;
+        }
+
+        private List<FileInfo> GetProjectFiles(DirectoryInfo directory, string searchPattern)
 		{
 			var files = new List<FileInfo>();
 
 			if (!PathIsIgnored(directory.Name))
 			{
-				SearchDirectoryForProjects(directory, files);
+				SearchDirectoryForProjects(directory, searchPattern, files);
 			}
 
 			return files;
 		}
 
-		private void SearchDirectoryForProjects(DirectoryInfo directory, List<FileInfo> files)
+		private void SearchDirectoryForProjects(DirectoryInfo directory, string searchPattern, List<FileInfo> files)
 		{
 			FileInfo[] projects = directory
-									.GetFiles("*.csproj")
+                                    .GetFiles(searchPattern)
 									.Where(f => !PathIsIgnored(f.Name))
 									.ToArray();
 
@@ -53,15 +63,15 @@ namespace SlimJim.Infrastructure
 			}
 			else
 			{
-				RecurseChildDirectories(directory, files);
+				RecurseChildDirectories(directory, searchPattern, files);
 			}
 		}
 
-		private void RecurseChildDirectories(DirectoryInfo directory, List<FileInfo> files)
+        private void RecurseChildDirectories(DirectoryInfo directory, string searchPattern, List<FileInfo> files)
 		{
 			foreach (DirectoryInfo dir in directory.EnumerateDirectories())
 			{
-				files.AddRange(GetProjectFiles(dir));
+				files.AddRange(GetProjectFiles(dir, searchPattern));
 			}
 		}
 

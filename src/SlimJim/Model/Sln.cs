@@ -18,7 +18,7 @@ namespace SlimJim.Model
 		{
 			Name = name;
 			Guid = guid;
-			Projects = new List<CsProj>();
+			Projects = new List<Proj>();
 			Version = VisualStudioVersion.VS2010;
 		}
 
@@ -47,7 +47,7 @@ namespace SlimJim.Model
 				}
 			}
 		}
-		public List<CsProj> Projects { get; private set; }
+		public List<Proj> Projects { get; private set; }
 
 		public IEnumerable<Folder> Folders
 		{
@@ -57,9 +57,9 @@ namespace SlimJim.Model
 			}
 		}
 
-		public void AddProjects(params CsProj[] csProjs)
+		public void AddProjects(params Proj[] projs)
 		{
-			foreach (CsProj proj in csProjs)
+			foreach (Proj proj in projs)
 			{
 				if (!Projects.Contains(proj))
 				{
@@ -69,7 +69,7 @@ namespace SlimJim.Model
 			}
 		}
 
-		private void AddProjectToFolder(CsProj proj)
+		private void AddProjectToFolder(Proj proj)
 		{
 			if (string.IsNullOrEmpty(ProjectsRootDirectory) || !proj.Path.StartsWith(ProjectsRootDirectory, StringComparison.InvariantCultureIgnoreCase))
 			{
@@ -84,7 +84,7 @@ namespace SlimJim.Model
 			folder.AddContent(proj.Guid);
 		}
 
-		private string GetSolutionFolderPath(CsProj proj)
+		private string GetSolutionFolderPath(Proj proj)
 		{
 			var relativeProjectPath = proj.Path.Substring(ProjectsRootDirectory.Length + 1);
 

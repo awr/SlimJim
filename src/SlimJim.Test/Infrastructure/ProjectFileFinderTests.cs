@@ -23,7 +23,7 @@ namespace SlimJim.Test.Infrastructure
 		[Test]
 		public void FindsOneProjectInFolderWithCsproj()
 		{
-			projectFiles = finder.FindAllProjectFiles(Path.Combine(SampleFileSystemPath, @"MyProject"));
+			projectFiles = finder.FindAllCsProjectFiles(Path.Combine(SampleFileSystemPath, @"MyProject"));
 
 			AssertFilesMatching(new[]
 				{
@@ -34,7 +34,7 @@ namespace SlimJim.Test.Infrastructure
 		[Test]
 		public void ReturnsFileInfosForEachProjectInFileSystem()
 		{
-			projectFiles = finder.FindAllProjectFiles(SampleFileSystemPath);
+			projectFiles = finder.FindAllCsProjectFiles(SampleFileSystemPath);
 
 			AssertFilesMatching(new[]
 				{
@@ -51,7 +51,7 @@ namespace SlimJim.Test.Infrastructure
 		public void IgnoresRelativePath()
 		{
 			finder.IgnorePatterns("Theirs");
-			projectFiles = finder.FindAllProjectFiles(SampleFileSystemPath);
+			projectFiles = finder.FindAllCsProjectFiles(SampleFileSystemPath);
 
 			AssertFilesMatching(new[]
 				{
@@ -65,7 +65,7 @@ namespace SlimJim.Test.Infrastructure
 		public void IgnoresFileName()
 		{
 			finder.IgnorePatterns("TheirProject3.csproj");
-			projectFiles = finder.FindAllProjectFiles(SampleFileSystemPath);
+			projectFiles = finder.FindAllCsProjectFiles(SampleFileSystemPath);
 
 			AssertFilesMatching(new[]
 				{
@@ -81,7 +81,7 @@ namespace SlimJim.Test.Infrastructure
 		public void IgnoresRelativePathWithDifferentCase()
 		{
 			finder.IgnorePatterns("ThEiRs");
-			projectFiles = finder.FindAllProjectFiles(SampleFileSystemPath);
+			projectFiles = finder.FindAllCsProjectFiles(SampleFileSystemPath);
 
 			AssertFilesMatching(new[]
 				{

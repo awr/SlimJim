@@ -31,7 +31,7 @@ namespace SlimJim
 			}
 		}
 
-		private void RestoreAssemblyReferencesInProject(CsProj project)
+		private void RestoreAssemblyReferencesInProject(Proj project)
 		{
 			var doc = LoadProject(project);
 			var nav = doc.CreateNavigator();
@@ -48,7 +48,7 @@ namespace SlimJim
 			doc.Save(project.Path);
 		}
 
-		private void ConvertToProjectReference(CsProj project, IEnumerable<CsProj> references)
+		private void ConvertToProjectReference(Proj project, IEnumerable<Proj> references)
 		{
 			var doc = LoadProject(project);
 			var nav = doc.CreateNavigator();

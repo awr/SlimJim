@@ -7,11 +7,11 @@ using SlimJim.Model;
 
 namespace SlimJim.Infrastructure
 {
-	public class CsProjReader
+    public class ProjReader
 	{
 		private static readonly XNamespace Ns = "http://schemas.microsoft.com/developer/msbuild/2003";
 
-		public virtual CsProj Read(FileInfo csProjFile)
+		public virtual Proj Read(FileInfo csProjFile)
 		{
 			var xml = LoadXml(csProjFile);
 			var properties = xml.Element(Ns + "PropertyGroup");
@@ -22,7 +22,7 @@ namespace SlimJim.Infrastructure
 
 			if (assemblyName == null) return null;
 
-			return new CsProj
+			return new Proj
 			{
 				Path = csProjFile.FullName,
 				AssemblyName = assemblyName.Value,
@@ -62,17 +62,18 @@ namespace SlimJim.Infrastructure
 
 		private List<string> ReadReferencedProjectGuids(XElement xml)
 		{
-			return (from pr in xml.DescendantsAndSelf(Ns + "ProjectReference")
+			return (
+                from pr in xml.DescendantsAndSelf(Ns + "ProjectReference")
 					  select pr.Element(Ns + "Project").Value).ToList();
 		}
 
 		private bool FindImportedNuGetTargets(XElement xml)
 		{
-			var importPaths = (from import in xml.DescendantsAndSelf(Ns + "Import")
-					select import.Attribute("Project").Value);
+			var importPaths = (
+                from import in xml.DescendantsAndSelf(Ns + "Import")
+                where import.Attribute("Project") != null
+				select import.Attribute("Project").Value);
 			return importPaths.Any(p => p.EndsWith(@"\.nuget\nuget.targets", StringComparison.InvariantCultureIgnoreCase));
 		}
-
-
 	}
 }

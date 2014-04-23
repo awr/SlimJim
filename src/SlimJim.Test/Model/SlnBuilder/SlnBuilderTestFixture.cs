@@ -20,9 +20,9 @@ namespace SlimJim.Test.Model.SlnBuilder
 			options = new SlnGenerationOptions(GetSamplePath("Projects"));
 		}
 
-		protected void GeneratePartialGraphSolution(string[] targetProjectNames, params CsProj[] projectsList)
+		protected void GeneratePartialGraphSolution(string[] targetProjectNames, params Proj[] projectsList)
 		{
-			var generator = new SlimJim.Model.SlnBuilder(new List<CsProj>(projectsList));
+			var generator = new SlimJim.Model.SlnBuilder(new List<Proj>(projectsList));
 			options.AddTargetProjectNames(targetProjectNames);
 			solution = generator.BuildSln(options);
 		}

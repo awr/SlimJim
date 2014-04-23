@@ -25,8 +25,8 @@ namespace SlimJim.Test.Model
 		public void CreatesNoSolutionFoldersForSimpleProjectStructure()
 		{
 			var sln = new Sln("sample") {ProjectsRootDirectory = "Fake/Example"};
-			sln.AddProjects(new CsProj {Path = "Fake/Example/ProjectA/ProjectA.csproj"});
-			sln.AddProjects(new CsProj {Path = "Fake/Example/ProjectB/ProjectB.csproj"});
+			sln.AddProjects(new Proj {Path = "Fake/Example/ProjectA/ProjectA.csproj"});
+			sln.AddProjects(new Proj {Path = "Fake/Example/ProjectB/ProjectB.csproj"});
 
 			Assert.That(sln.Folders, Is.Null, "Folders");
 		}
@@ -35,8 +35,8 @@ namespace SlimJim.Test.Model
 		public void CreatesSolutionFoldersForNestedProjectStructure()
 		{
 			var sln = new Sln("sample") { ProjectsRootDirectory = "Fake/Example" };
-			sln.AddProjects(new CsProj { Path = "Fake/Example/ModuleA/ProjectA/ProjectA.csproj" });
-			sln.AddProjects(new CsProj { Path = "Fake/Example/ModuleA/ProjectB/ProjectB.csproj" });
+			sln.AddProjects(new Proj { Path = "Fake/Example/ModuleA/ProjectA/ProjectA.csproj" });
+			sln.AddProjects(new Proj { Path = "Fake/Example/ModuleA/ProjectB/ProjectB.csproj" });
 
 			var folder = sln.Folders.FirstOrDefault();
 
@@ -48,7 +48,7 @@ namespace SlimJim.Test.Model
 		public void CreatesNestedSolutionFolders()
 		{
 			var sln = new Sln("sample") { ProjectsRootDirectory = "Fake/Example" };
-			var proj = new CsProj { Path = "Fake/Example/Grouping1/ModuleA/ProjectA/ProjectA.csproj", Guid = Guid.NewGuid().ToString("B")};
+			var proj = new Proj { Path = "Fake/Example/Grouping1/ModuleA/ProjectA/ProjectA.csproj", Guid = Guid.NewGuid().ToString("B")};
 			sln.AddProjects(proj);
 
 			var child = sln.Folders.First(f => f.FolderName == "ModuleA");
@@ -62,7 +62,7 @@ namespace SlimJim.Test.Model
 		public void HandlesTrailingSlashOnRootDirectory()
 		{
 			var sln = new Sln("sample") { ProjectsRootDirectory = "Fake/Example/" };
-			var proj = new CsProj { Path = "Fake/Example/ModuleA/ProjectA/ProjectA.csproj", Guid = Guid.NewGuid().ToString("B") };
+			var proj = new Proj { Path = "Fake/Example/ModuleA/ProjectA/ProjectA.csproj", Guid = Guid.NewGuid().ToString("B") };
 			sln.AddProjects(proj);
 
 			Assert.That(sln.Folders.FirstOrDefault(f => f.FolderName == "ModuleA"), Is.Not.Null, "Folders");

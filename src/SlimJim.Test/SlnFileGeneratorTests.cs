@@ -16,7 +16,7 @@ namespace SlimJim.Test
 		private CsProjRepository repo;
 		private SlnBuilder slnBuilder;
 		private SlnGenerationOptions options;
-		private readonly List<CsProj> projects = new List<CsProj>();
+		private readonly List<Proj> projects = new List<Proj>();
 		private readonly Sln createdSlnObject = new Sln("Sln");
 
 		private string ProjectsDir
@@ -32,11 +32,11 @@ namespace SlimJim.Test
 		{
 			repo = MockRepository.GenerateStrictMock<CsProjRepository>();
 			slnWriter = MockRepository.GenerateStrictMock<SlnFileWriter>();
-			slnBuilder = MockRepository.GenerateStrictMock<SlnBuilder>(new List<CsProj>());
+			slnBuilder = MockRepository.GenerateStrictMock<SlnBuilder>(new List<Proj>());
 
 			gen = new SlnFileGenerator()
 			{
-				ProjectRepository = repo,
+				CsRepository = repo,
 				SlnWriter = slnWriter
 			};
 
@@ -48,7 +48,7 @@ namespace SlimJim.Test
 		public void CreatesOwnInstancesOfRepositoryAndWriter()
 		{
 			gen = new SlnFileGenerator();
-			Assert.That(gen.ProjectRepository, Is.Not.Null, "Should have created instance of CsProjRepository.");
+			Assert.That(gen.CsRepository, Is.Not.Null, "Should have created instance of CsProjRepository.");
 			Assert.That(gen.SlnWriter, Is.Not.Null, "Should have created instance of SlnFileWriter.");
 		}
 
@@ -57,7 +57,7 @@ namespace SlimJim.Test
 		{
 			options.TargetProjectNames.Add(TargetProject);
 
-			repo.Expect(r => r.LookupCsProjsFromDirectory(options)).Return(projects);
+			repo.Expect(r => r.LookupProjsFromDirectory(options)).Return(projects);
 			slnBuilder.Expect(bld => bld.BuildSln(options)).Return(createdSlnObject);
 			slnWriter.Expect(wr => wr.WriteSlnFile(createdSlnObject, ProjectsDir));
 

@@ -29,10 +29,10 @@ namespace SlimJim.Test.Infrastructure
 
 		private readonly FileInfo file1 = SampleFileHelper.GetCsProjFile("Simple");
 		private readonly FileInfo file2 = SampleFileHelper.GetCsProjFile("Simple");
-		private readonly CsProj proj1 = new CsProj {AssemblyName = "Proj1"};
-		private readonly CsProj proj2 = new CsProj {AssemblyName = "Proj1"};
+		private readonly Proj proj1 = new Proj {AssemblyName = "Proj1"};
+		private readonly Proj proj2 = new Proj {AssemblyName = "Proj1"};
 		private ProjectFileFinder finder;
-		private CsProjReader reader;
+		private ProjReader reader;
 		private CsProjRepository repository;
 		private SlnGenerationOptions options;
 
@@ -41,7 +41,7 @@ namespace SlimJim.Test.Infrastructure
 		{
 			options = new SlnGenerationOptions(WorkingDirectory);
 			finder = MockRepository.GenerateStrictMock<ProjectFileFinder>();
-			reader = MockRepository.GenerateStrictMock<CsProjReader>();
+			reader = MockRepository.GenerateStrictMock<ProjReader>();
 			repository = new CsProjRepository
 			{
 				Finder = finder,
@@ -61,17 +61,17 @@ namespace SlimJim.Test.Infrastructure
 		{
 			repository = new CsProjRepository();
 			Assert.That(repository.Finder, Is.Not.Null, "Should have created instance of CsProjFinder.");
-			Assert.That(repository.Reader, Is.Not.Null, "Should have created instance of CsProjReader.");
+			Assert.That(repository.Reader, Is.Not.Null, "Should have created instance of ProjReader.");
 		}
 
 		[Test]
 		public void GetsFilesFromFinderAndProcessesThemWithCsProjReader()
 		{
-			finder.Expect(f => f.FindAllProjectFiles(WorkingDirectory)).Return(new List<FileInfo>{file1, file2});
+			finder.Expect(f => f.FindAllCsProjectFiles(WorkingDirectory)).Return(new List<FileInfo>{file1, file2});
 			reader.Expect(r => r.Read(file1)).Return(proj1);
 			reader.Expect(r => r.Read(file2)).Return(proj2);
 
-			List<CsProj> projects = repository.LookupCsProjsFromDirectory(options);
+			List<Proj> projects = repository.LookupProjsFromDirectory(options);
 
 			Assert.That(projects, Is.EqualTo(new[]{proj1, proj2}));
 		}
@@ -79,11 +79,11 @@ namespace SlimJim.Test.Infrastructure
 		[Test]
 		public void GracefullyHandlesNullsFromReader()
 		{
-			finder.Expect(f => f.FindAllProjectFiles(WorkingDirectory)).Return(new List<FileInfo> { file1, file2 });
+			finder.Expect(f => f.FindAllCsProjectFiles(WorkingDirectory)).Return(new List<FileInfo> { file1, file2 });
 			reader.Expect(r => r.Read(file1)).Return(proj1);
 			reader.Expect(r => r.Read(file2)).Return(null);
 
-			List<CsProj> projects = repository.LookupCsProjsFromDirectory(options);
+			List<Proj> projects = repository.LookupProjsFromDirectory(options);
 
 			Assert.That(projects, Is.EqualTo(new[] { proj1 }));
 		}
@@ -92,11 +92,11 @@ namespace SlimJim.Test.Infrastructure
 		public void ReadsFilesFromAdditionalSearchPathsAsWell()
 		{
 			options.AddAdditionalSearchPaths(new[] { SearchPath1, SearchPath2 });
-			finder.Expect(f => f.FindAllProjectFiles(WorkingDirectory)).Return(new List<FileInfo>());
-			finder.Expect(f => f.FindAllProjectFiles(SearchPath1)).Return(new List<FileInfo>());
-			finder.Expect(f => f.FindAllProjectFiles(SearchPath2)).Return(new List<FileInfo>());
+			finder.Expect(f => f.FindAllCsProjectFiles(WorkingDirectory)).Return(new List<FileInfo>());
+			finder.Expect(f => f.FindAllCsProjectFiles(SearchPath1)).Return(new List<FileInfo>());
+			finder.Expect(f => f.FindAllCsProjectFiles(SearchPath2)).Return(new List<FileInfo>());
 
-			repository.LookupCsProjsFromDirectory(options);
+			repository.LookupProjsFromDirectory(options);
 		}
 
 		[Test]
@@ -104,9 +104,9 @@ namespace SlimJim.Test.Infrastructure
 		{
 			options.AddIgnoreDirectoryPatterns("Folder1", "Folder2");
 			finder.Expect(f => f.IgnorePatterns(new[] {"Folder1", "Folder2"}));
-			finder.Expect(f => f.FindAllProjectFiles(WorkingDirectory)).Return(new List<FileInfo>());
+			finder.Expect(f => f.FindAllCsProjectFiles(WorkingDirectory)).Return(new List<FileInfo>());
 
-			repository.LookupCsProjsFromDirectory(options);
+			repository.LookupProjsFromDirectory(options);
 		}
 	}
 }

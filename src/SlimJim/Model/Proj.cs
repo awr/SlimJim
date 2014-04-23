@@ -2,9 +2,9 @@
 
 namespace SlimJim.Model
 {
-	public class CsProj
+	public class Proj
 	{
-		public CsProj()
+		public Proj()
 		{
 			ReferencedAssemblyNames = new List<string>();
 			ReferencedProjectGuids = new List<string>();
@@ -23,9 +23,9 @@ namespace SlimJim.Model
 			get { return System.IO.Path.GetFileNameWithoutExtension(Path); }
 		}
 
-		public void ReferencesAssemblies(params CsProj[] assemblyReferences)
+		public void ReferencesAssemblies(params Proj[] assemblyReferences)
 		{
-			foreach (CsProj reference in assemblyReferences)
+			foreach (Proj reference in assemblyReferences)
 			{
 				if (!ReferencedAssemblyNames.Contains(reference.AssemblyName))
 				{
@@ -34,9 +34,9 @@ namespace SlimJim.Model
 			}
 		}
 
-		public void ReferencesProjects(params CsProj[] projectReferences)
+		public void ReferencesProjects(params Proj[] projectReferences)
 		{
-			foreach (CsProj reference in projectReferences)
+			foreach (Proj reference in projectReferences)
 			{
 				if (!ReferencedProjectGuids.Contains(reference.Guid))
 				{

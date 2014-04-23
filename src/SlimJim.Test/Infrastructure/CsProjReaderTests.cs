@@ -13,7 +13,7 @@ namespace SlimJim.Test.Infrastructure
 		[Test]
 		public void ReadsFileContentsIntoObject()
 		{
-			CsProj project = GetProject("Simple");
+			Proj project = GetProject("Simple");
 
 			Assert.That(project.Guid, Is.EqualTo("{4A37C916-5AA3-4C12-B7A8-E5F878A5CDBA}"));
 			Assert.That(project.AssemblyName, Is.EqualTo("MyProject"));
@@ -39,7 +39,7 @@ namespace SlimJim.Test.Infrastructure
 		[Test]
 		public void IgnoresNestedReferences()
 		{
-			CsProj project = GetProject("ConvertedReference");
+			Proj project = GetProject("ConvertedReference");
 
 			Assert.That(project.ReferencedAssemblyNames, Is.Not.Contains("log4net"));
 		}
@@ -47,7 +47,7 @@ namespace SlimJim.Test.Infrastructure
 		[Test]
 		public void TakesOnlyNameOfFullyQualifiedAssemblyName()
 		{
-			CsProj project = GetProject("FQAssemblyName");
+			Proj project = GetProject("FQAssemblyName");
 
 			Assert.That(project.ReferencedAssemblyNames, Contains.Item("NHibernate"));
 		}
@@ -55,7 +55,7 @@ namespace SlimJim.Test.Infrastructure
 		[Test]
 		public void NoProjectReferencesDoesNotCauseNRE()
 		{
-			CsProj project = GetProject("NoProjectReferences");
+			Proj project = GetProject("NoProjectReferences");
 
 			Assert.That(project.ReferencedProjectGuids, Is.Empty);
 		}
@@ -63,15 +63,15 @@ namespace SlimJim.Test.Infrastructure
 		[Test]
 		public void NoAssemblyName_ReturnsNull()
 		{
-			CsProj project = GetProject("BreaksThings");
+			Proj project = GetProject("BreaksThings");
 
 			Assert.That(project, Is.Null);
 		}
 
-		private CsProj GetProject(string fileName)
+		private Proj GetProject(string fileName)
 		{
 			file = SampleFiles.SampleFileHelper.GetCsProjFile(fileName);
-			var reader = new CsProjReader();
+			var reader = new ProjReader();
 			return reader.Read(file);
 		}
 	}

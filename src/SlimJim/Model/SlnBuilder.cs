@@ -9,12 +9,12 @@ namespace SlimJim.Model
 	{
 		private static readonly ILog Log = LogManager.GetLogger(typeof(SlnFileGenerator));
 
-		private readonly List<CsProj> projectsList;
+		private readonly List<Proj> projectsList;
 		private Sln builtSln;
 		private static SlnBuilder overriddenBuilder;
 		private SlnGenerationOptions options;
 
-		public SlnBuilder(List<CsProj> projectsList)
+		public SlnBuilder(List<Proj> projectsList)
 		{
 			this.projectsList = projectsList;
 		}
@@ -51,7 +51,7 @@ namespace SlimJim.Model
 
 			foreach (string targetProjectName in options.TargetProjectNames)
 			{
-				CsProj rootProject = AddAssemblySubtree(targetProjectName);
+				Proj rootProject = AddAssemblySubtree(targetProjectName);
 
 				if (rootProject == null)
 				{
@@ -69,16 +69,16 @@ namespace SlimJim.Model
 			projectsList.ForEach(AddProject);
 		}
 
-		private CsProj AddAssemblySubtree(string assemblyName, string targetFrameworkVersion = "")
+		private Proj AddAssemblySubtree(string assemblyName, string targetFrameworkVersion = "")
 		{
-			CsProj project = FindProjectByAssemblyName(assemblyName, targetFrameworkVersion);
+			Proj project = FindProjectByAssemblyName(assemblyName, targetFrameworkVersion);
 
 			AddProjectAndReferences(project);
 
 			return project;
 		}
 
-		private CsProj FindProjectByAssemblyName(string assemblyName, string targetFrameworkVersion)
+		private Proj FindProjectByAssemblyName(string assemblyName, string targetFrameworkVersion)
 		{
 			var matches = projectsList.Where(p => p.AssemblyName == assemblyName).ToList();
 
@@ -114,7 +114,7 @@ namespace SlimJim.Model
 		    return matches.First();
 		}
 
-		private void AddProjectAndReferences(CsProj project)
+		private void AddProjectAndReferences(Proj project)
 		{
 			if (project != null)
 			{
@@ -129,12 +129,12 @@ namespace SlimJim.Model
 			}
 		}
 
-		private void AddProject(CsProj project)
+		private void AddProject(Proj project)
 		{
 			builtSln.AddProjects(project);
 		}
 
-		private void IncludeEfferentProjectReferences(CsProj project)
+		private void IncludeEfferentProjectReferences(Proj project)
 		{
 			foreach (string projectGuid in project.ReferencedProjectGuids)
 			{
@@ -142,7 +142,7 @@ namespace SlimJim.Model
 			}
 		}
 
-		private void IncludeEfferentAssemblyReferences(CsProj project)
+		private void IncludeEfferentAssemblyReferences(Proj project)
 		{
 			foreach (string assemblyName in project.ReferencedAssemblyNames)
 			{
@@ -152,41 +152,41 @@ namespace SlimJim.Model
 
 		private void AddProjectSubtree(string projectGuid)
 		{
-			CsProj referencedProject = FindProjectByProjectGuid(projectGuid);
+			Proj referencedProject = FindProjectByProjectGuid(projectGuid);
 
 			AddProjectAndReferences(referencedProject);
 		}
 
-		private void AddAfferentReferencesToProject(CsProj project)
+		private void AddAfferentReferencesToProject(Proj project)
 		{
 			if (project != null)
 			{
-				List<CsProj> afferentAssemblyReferences = projectsList.FindAll(
+				List<Proj> afferentAssemblyReferences = projectsList.FindAll(
 					csp => csp.ReferencedAssemblyNames.Contains(project.AssemblyName));
 
 				AddAfferentReferences(afferentAssemblyReferences);
 
-				List<CsProj> afferentProjectReferences =
+				List<Proj> afferentProjectReferences =
 					projectsList.FindAll(csp => csp.ReferencedProjectGuids.Contains(project.Guid));
 
 				AddAfferentReferences(afferentProjectReferences);
 			}
 		}
 
-		private void AddAfferentReferences(List<CsProj> afferentReferences)
+		private void AddAfferentReferences(List<Proj> afferentReferences)
 		{
-			foreach (CsProj assemblyReference in afferentReferences)
+			foreach (Proj assemblyReference in afferentReferences)
 			{
 				AddProjectAndReferences(assemblyReference);
 			}
 		}
 
-		private CsProj FindProjectByProjectGuid(string projectGuid)
+		private Proj FindProjectByProjectGuid(string projectGuid)
 		{
 			return projectsList.Find(csp => csp.Guid == projectGuid);
 		}
 
-		public static SlnBuilder GetSlnBuilder(List<CsProj> projects)
+		public static SlnBuilder GetSlnBuilder(List<Proj> projects)
 		{
 			return overriddenBuilder ?? new SlnBuilder(projects);
 		}

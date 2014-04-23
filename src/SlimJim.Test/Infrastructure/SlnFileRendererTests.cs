@@ -61,10 +61,10 @@ namespace SlimJim.Test.Infrastructure
 			TestRender();
 		}
 
-		private void MakeSolution(string name, params CsProj[] csProjs)
+		private void MakeSolution(string name, params Proj[] projs)
 		{
 			solution = new Sln(name, "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}");
-			solution.AddProjects(csProjs);
+			solution.AddProjects(projs);
 		}
 
 		private void TestRender()

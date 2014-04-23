@@ -22,7 +22,7 @@ namespace SlimJim
 			return e;
 		}
 
-		protected XmlDocument LoadProject(CsProj project)
+		protected XmlDocument LoadProject(Proj project)
 		{
 			var doc = new XmlDocument();
 			doc.Load(project.Path);

@@ -11,20 +11,23 @@ namespace SlimJim
 	public class SlnFileGenerator
 	{
 		private static readonly ILog Log = LogManager.GetLogger(typeof(SlnFileGenerator));
-		public CsProjRepository ProjectRepository { get; set; }
-		public SlnFileWriter SlnWriter { get; set; }
+        public CsProjRepository CsRepository { get; set; }
+        public VbProjRepository VbRepository { get; set; }
+        public SlnFileWriter SlnWriter { get; set; }
 
 		public SlnFileGenerator()
 		{
-			ProjectRepository = new CsProjRepository();
-			SlnWriter = new SlnFileWriter();
+            CsRepository = new CsProjRepository();
+            VbRepository = new VbProjRepository();
+            SlnWriter = new SlnFileWriter();
 		}
 
 		public string GenerateSolutionFile(SlnGenerationOptions options)
 		{
 			LogSummary(options);
 
-			List<CsProj> projects = ProjectRepository.LookupCsProjsFromDirectory(options);
+			List<Proj> projects = CsRepository.LookupProjsFromDirectory(options);
+            projects.AddRange(VbRepository.LookupProjsFromDirectory(options));
 			Sln solution = SlnBuilder.GetSlnBuilder(projects).BuildSln(options);
 
 			if (options.FixHintPaths)
@@ -51,7 +54,7 @@ namespace SlimJim
 			return SlnWriter.WriteSlnFile(solution, options.SlnOutputPath).FullName;
 		}
 
-		private void WarnOnMissingNuGetTargets(List<CsProj> projects, SlnGenerationOptions options)
+		private void WarnOnMissingNuGetTargets(List<Proj> projects, SlnGenerationOptions options)
 		{
 			var nugetTargetsPath = Path.Combine(options.SlnOutputPath, ".nuget", "nuget.targets");
 			if (projects.Any(p => p.UsesMSBuildPackageRestore) && !File.Exists(nugetTargetsPath))

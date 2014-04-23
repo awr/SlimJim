@@ -30,7 +30,7 @@ namespace SlimJim
 			}
 		}
 
-		private void ConvertProjectHintPaths(CsProj project, string packagesDir, Mode mode = Mode.Convert)
+		private void ConvertProjectHintPaths(Proj project, string packagesDir, Mode mode = Mode.Convert)
 		{
 			var doc = LoadProject(project);
 			var nav = doc.CreateNavigator();

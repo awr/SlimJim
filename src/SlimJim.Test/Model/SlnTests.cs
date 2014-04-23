@@ -48,7 +48,7 @@ namespace SlimJim.Test.Model
 		public void CreatesNestedSolutionFolders()
 		{
 			var sln = new Sln("sample") { ProjectsRootDirectory = "Fake/Example" };
-			var proj = new Proj { Path = "Fake/Example/Grouping1/ModuleA/ProjectA/ProjectA.csproj", Guid = Guid.NewGuid().ToString("B")};
+			var proj = new Proj { Path = "Fake/Example/Grouping1/ModuleA/ProjectA/ProjectA.csproj", Guid = Guid.NewGuid()};
 			sln.AddProjects(proj);
 
 			var child = sln.Folders.First(f => f.FolderName == "ModuleA");
@@ -62,7 +62,7 @@ namespace SlimJim.Test.Model
 		public void HandlesTrailingSlashOnRootDirectory()
 		{
 			var sln = new Sln("sample") { ProjectsRootDirectory = "Fake/Example/" };
-			var proj = new Proj { Path = "Fake/Example/ModuleA/ProjectA/ProjectA.csproj", Guid = Guid.NewGuid().ToString("B") };
+			var proj = new Proj { Path = "Fake/Example/ModuleA/ProjectA/ProjectA.csproj", Guid = Guid.NewGuid() };
 			sln.AddProjects(proj);
 
 			Assert.That(sln.Folders.FirstOrDefault(f => f.FolderName == "ModuleA"), Is.Not.Null, "Folders");

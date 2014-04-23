@@ -136,7 +136,7 @@ namespace SlimJim.Model
 
 		private void IncludeEfferentProjectReferences(Proj project)
 		{
-			foreach (string projectGuid in project.ReferencedProjectGuids)
+			foreach (var projectGuid in project.ReferencedProjectGuids)
 			{
 				AddProjectSubtree(projectGuid);
 			}
@@ -150,7 +150,7 @@ namespace SlimJim.Model
 			}
 		}
 
-		private void AddProjectSubtree(string projectGuid)
+		private void AddProjectSubtree(Guid projectGuid)
 		{
 			Proj referencedProject = FindProjectByProjectGuid(projectGuid);
 
@@ -181,7 +181,7 @@ namespace SlimJim.Model
 			}
 		}
 
-		private Proj FindProjectByProjectGuid(string projectGuid)
+		private Proj FindProjectByProjectGuid(Guid projectGuid)
 		{
 			return projectsList.Find(csp => csp.Guid == projectGuid);
 		}

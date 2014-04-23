@@ -81,7 +81,7 @@ namespace SlimJim.Model
 			if (string.IsNullOrEmpty(relativeFolderPath)) return;
 
 			var folder = GetOrCreateSolutionFolder(relativeFolderPath);
-			folder.AddContent(proj.Guid);
+			folder.AddContent(proj.Guid.ToString("B"));
 		}
 
 		private string GetSolutionFolderPath(Proj proj)

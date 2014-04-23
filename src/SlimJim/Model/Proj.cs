@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace SlimJim.Model
 {
@@ -7,15 +8,15 @@ namespace SlimJim.Model
 		public Proj()
 		{
 			ReferencedAssemblyNames = new List<string>();
-			ReferencedProjectGuids = new List<string>();
+            ReferencedProjectGuids = new List<Guid>();
 		}
 
-		public string Guid { get; set; }
+		public Guid Guid { get; set; }
 		public string Path { get; set; }
 		public string AssemblyName { get; set; }
 		public string TargetFrameworkVersion { get; set; }
 		public List<string> ReferencedAssemblyNames { get; set; }
-		public List<string> ReferencedProjectGuids { get; set; }
+		public List<Guid> ReferencedProjectGuids { get; set; }
 		public bool UsesMSBuildPackageRestore { get; set; }
 
 		public string ProjectName
@@ -48,7 +49,7 @@ namespace SlimJim.Model
 		public override string ToString()
 		{
 			return base.ToString() + 
-				string.Format(@" {{AssemblyName=""{0}"", Guid=""{1}"", Path=""{2}""}}", AssemblyName, Guid, Path);
+				string.Format(@" {{AssemblyName=""{0}"", Guid=""{1:B}"", Path=""{2}""}}", AssemblyName, Guid, Path);
 		}
 	}
 }

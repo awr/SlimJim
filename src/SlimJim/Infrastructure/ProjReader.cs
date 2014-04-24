@@ -14,18 +14,22 @@ namespace SlimJim.Infrastructure
 		public virtual Proj Read(FileInfo csProjFile)
 		{
 			var xml = LoadXml(csProjFile);
-			var properties = xml.Element(Ns + "PropertyGroup");
+			var properties = (from p in xml.Elements(Ns + "PropertyGroup")
+                                  where !p.HasAttributes
+                                  select p).FirstOrDefault();
 
 			if (properties == null) return null;
 
-			var assemblyName = properties.Element(Ns + "AssemblyName");
+            var assemblyNameElement = properties.Element(Ns + "AssemblyName");
 
-			if (assemblyName == null) return null;
+		    var assemblyName = (assemblyNameElement == null
+		        ? csProjFile.Name
+		        : assemblyNameElement.Value);
 
 			return new Proj
 			{
 				Path = csProjFile.FullName,
-				AssemblyName = assemblyName.Value,
+				AssemblyName = assemblyName,
 				Guid = Guid.Parse(properties.Element(Ns + "ProjectGuid").ValueOrDefault()).ToString("B"),
 				TargetFrameworkVersion = properties.Element(Ns + "TargetFrameworkVersion").ValueOrDefault(),
 				ReferencedAssemblyNames = ReadReferencedAssemblyNames(xml),
